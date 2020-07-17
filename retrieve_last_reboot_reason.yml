@@ -1,0 +1,25 @@
+---
+- name: Get facts using the galaxy module
+  hosts: all
+  connection: local
+  gather_facts: no
+  roles:
+    - Juniper.junos
+  vars_prompt:
+    - name: USERNAME
+      prompt: Username
+      private: no
+    - name: PASSWORD
+      prompt: Password
+      private: yes
+
+  tasks:
+    - name: Get Junos Facts Using Galaxy Module
+      juniper_junos_facts:
+        host: "{{ inventory_hostname }}"
+        user: "{{ USERNAME }}"
+        passwd: "{{ PASSWORD }}"
+      register: response
+    - name: Print Facts via Registered Response
+      debug:
+        var: response.facts.RE0.last_reboot_reason
